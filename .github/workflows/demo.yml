@@ -1,8 +1,10 @@
 name: Deploy website
+
 on:
   push:
     branches:
       - master
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,6 +17,7 @@ jobs:
         run: npm run lint
       - name: Test code
         run: npm run test
+
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -30,8 +33,11 @@ jobs:
         with:
           name: dist-files
           path: |
-            dist
+            dist/**
             package.json
+          if-no-files-found: warn
+          retention-days: 1
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
