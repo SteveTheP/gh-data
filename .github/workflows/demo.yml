@@ -24,19 +24,27 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+
       - name: Install dependencies
         run: npm ci
+
       - name: Build website
         run: npm run build
+
+      - name: Remove problematic files
+        run: find dist -name '*:Zone.Identifier' -delete
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist-files
           path: |
-            dist/**
+            dist
+            dist/**/*
             package.json
           if-no-files-found: warn
           retention-days: 1
+
 
   deploy:
     needs: build
